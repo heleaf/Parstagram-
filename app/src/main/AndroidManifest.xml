@@ -17,9 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ParstagramJava"
         tools:targetApi="31" >
-        <activity
-            android:name=".TimelineActivity"
-            android:exported="false" /> <!-- make sure within the application tag, otherwise app will crash with XmlResourceParser errors -->
+<!--        <activity-->
+<!--            android:name=".TimelineActivity"-->
+<!--            android:exported="false" /> &lt;!&ndash; make sure within the application tag, otherwise app will crash with XmlResourceParser errors &ndash;&gt;-->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.codepath.hfyfileprovider"

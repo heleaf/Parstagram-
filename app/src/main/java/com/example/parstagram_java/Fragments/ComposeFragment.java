@@ -22,19 +22,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.parstagram_java.MainActivity;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
-import com.example.parstagram_java.TimelineActivity;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,31 +53,9 @@ public class ComposeFragment extends Fragment {
         // Required empty public constructor
     }
 
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment ComposeFragment.
-//     */
-//    // TODO: Rename and change types and number of parameters
-//    public static ComposeFragment newInstance(String param1, String param2) {
-//        ComposeFragment fragment = new ComposeFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
     }
 
     @Override
@@ -103,8 +76,6 @@ public class ComposeFragment extends Fragment {
         mIvPicture = view.findViewById(R.id.postPicture);
         mTakePictureButton = view.findViewById(R.id.takePictureButton);
         mSubmitPostButton = view.findViewById(R.id.submitPostButton);
-
-//        queryPosts();
 
         if (mTakePictureButton == null) return;
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -218,28 +189,11 @@ public class ComposeFragment extends Fragment {
                 mSubmitPostButton.setVisibility(View.GONE);
                 mDescription.setVisibility(View.GONE);
 
-                // switch intents
-//                Intent i = new Intent(getContext(), TimelineActivity.class);
-//                startActivity(i);
+                // switch to timeline fragment???
+//                getActivity().getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.flContainer, new TimelineFragment()).commit();
             }
         });
     }
 
-    private void queryPosts() {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-                // all post objects from our database
-                if (e != null){
-                    // something has gone wrong
-                    Log.e(TAG, "Issue with getting posts", e);
-                }
-                for (Post post : posts){
-                    Log.i(TAG, "Post: " + post.getDescription() + " username: " + post.getUser().getUsername());
-                }
-            }
-        });
-    }
 }
