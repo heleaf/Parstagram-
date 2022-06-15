@@ -170,6 +170,10 @@ public class MainActivity extends AppCompatActivity {
                 mTakePictureButton.setText("Take Picture");
                 mSubmitPostButton.setVisibility(View.GONE);
                 mDescription.setVisibility(View.GONE);
+
+                // switch intents
+                Intent i = new Intent(MainActivity.this, TimelineActivity.class);
+                startActivity(i);
             }
         });
     }

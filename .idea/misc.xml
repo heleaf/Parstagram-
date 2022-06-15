@@ -5,6 +5,8 @@
       <map>
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_timeline.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/timeline_item.xml" value="0.18259327114907453" />
         <entry key="app/src/main/res/menu/menu_main.xml" value="0.1" />
         <entry key="app/src/main/res/xml/fileprovider.xml" value="0.1" />
       </map>
