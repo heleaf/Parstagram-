@@ -35,8 +35,8 @@ public class ParseApplication extends Application {
                 // should correspond to Client key env variable
                 .server("https://parseapi.back4app.com").build());
 
-        ParseObject testObject = new ParseObject("TestObject");
-        testObject.put("foo", "bar");
-        testObject.saveInBackground();
+//        ParseObject testObject = new ParseObject("TestObject");
+//        testObject.put("foo", "bar");
+//        testObject.saveInBackground();
     }
 }
