@@ -53,6 +53,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         ImageView postPhoto;
         ImageView profilePhoto;
         TextView description;
+        TextView relativeTimeStamp;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -60,6 +61,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postPhoto = itemView.findViewById(R.id.timelinePostPhoto);
             profilePhoto = itemView.findViewById(R.id.timelineProfilePhoto);
             description = itemView.findViewById(R.id.timelineDescription);
+            relativeTimeStamp = itemView.findViewById(R.id.timelineRelativeTimeStamp);
         }
 
 
@@ -75,6 +77,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
 
             description.setText(post.getDescription());
+
+             relativeTimeStamp.setText(post.getRelativeTimeCreated());
+
+//            if (post.profileImgUrl != null){
+//                Glide.with(context).load(post.profileImgUrl).circleCrop().into(profilePhoto);
+//            }
 
         }
     }
