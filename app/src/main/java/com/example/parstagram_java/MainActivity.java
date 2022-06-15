@@ -140,6 +140,9 @@ public class MainActivity extends AppCompatActivity {
                 // Load the taken image into a preview
                 mIvPicture.setImageBitmap(takenImage);
                 mIvPicture.setVisibility(View.VISIBLE);
+                mDescription.setVisibility(View.VISIBLE);
+                mSubmitPostButton.setVisibility(View.VISIBLE);
+                mTakePictureButton.setText("Retake Picture");
             } else { // Result was a failure
                 Toast.makeText(this, "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
@@ -163,7 +166,10 @@ public class MainActivity extends AppCompatActivity {
                 if (mDescription == null) return;
                 mDescription.setText(""); // clear the description
                 Toast.makeText(MainActivity.this, "yay submitted post", Toast.LENGTH_LONG).show();
-                mIvPicture.setImageResource(0);
+                mIvPicture.setImageResource(0); // remove the image
+                mTakePictureButton.setText("Take Picture");
+                mSubmitPostButton.setVisibility(View.GONE);
+                mDescription.setVisibility(View.GONE);
             }
         });
     }
