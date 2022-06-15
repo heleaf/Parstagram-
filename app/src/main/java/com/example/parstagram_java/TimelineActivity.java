@@ -1,5 +1,6 @@
 package com.example.parstagram_java;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,8 +8,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -21,11 +26,13 @@ import java.util.List;
 
 public class TimelineActivity extends AppCompatActivity {
 
-    // need to implement a recyclerview
+    public static final String TAG = "TimelineActivity";
+
     RecyclerView rvPosts;
     PostAdapter adapter;
     List<Post> posts;
     SwipeRefreshLayout swipeContainer;
+//    BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,7 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
     }
 
     private void queryPosts(){

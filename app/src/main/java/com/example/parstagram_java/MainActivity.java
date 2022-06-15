@@ -1,5 +1,6 @@
 package com.example.parstagram_java;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -20,6 +21,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -39,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
     @Nullable ImageView mIvPicture;
     @Nullable Button mTakePictureButton;
     @Nullable Button mSubmitPostButton;
-    File photoFile;
+    @Nullable File photoFile;
+    @Nullable BottomNavigationView bottomNavigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
         mSubmitPostButton = findViewById(R.id.submitPostButton);
         
         queryPosts();
+
+        bottomNavigationView = findViewById(R.id.bottomNavBar);
     }
 
     @Override
@@ -86,6 +93,24 @@ public class MainActivity extends AppCompatActivity {
                 }
                 ParseUser currUser = ParseUser.getCurrentUser();
                 savePost(descriptionText, currUser, photoFile);
+            }
+        });
+
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.actionHome:
+                        Log.d(TAG, "home button");
+                        return true;
+                    case R.id.actionCreate:
+                        Log.d(TAG, "create button");
+                        return true;
+                    case R.id.actionProfile:
+                        Log.d(TAG, "action button");
+                        return true;
+                    default: return true;
+                }
             }
         });
 
