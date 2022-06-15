@@ -9,11 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.parstagram_java.EndlessRecyclerViewScrollListener;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.PostAdapter;
 import com.example.parstagram_java.R;
@@ -24,17 +26,17 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TimelineFragment #newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TimelineFragment extends Fragment {
+    public static final String TAG = "TimelineFragment";
+    public static final int RESULTS_PER_LOAD = 5;
 
     RecyclerView rvPosts;
     PostAdapter adapter;
     List<Post> posts;
     SwipeRefreshLayout swipeContainer;
+
+    // Store a member variable for the listener
+    private EndlessRecyclerViewScrollListener scrollListener;
 
     public TimelineFragment() {
         // Required empty public constructor
@@ -60,7 +62,20 @@ public class TimelineFragment extends Fragment {
         posts = new ArrayList<>();
         adapter = new PostAdapter(getContext(), posts);
         rvPosts.setAdapter(adapter);
-        rvPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        rvPosts.setLayoutManager(linearLayoutManager);
+
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi(page);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvPosts.addOnScrollListener(scrollListener);
 
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.timelineSwipeContainer);
@@ -72,7 +87,7 @@ public class TimelineFragment extends Fragment {
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
                 posts.clear();
-                queryPosts();
+                queryPosts(0, RESULTS_PER_LOAD, true);
             }
         });
         // Configure the refreshing colors
@@ -81,18 +96,31 @@ public class TimelineFragment extends Fragment {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
-        queryPosts();
+        queryPosts(0, RESULTS_PER_LOAD, true);
+    }
+
+    // Append the next page of data into the adapter
+    private void loadNextDataFromApi(int offset) {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+
+        queryPosts(posts.size(), RESULTS_PER_LOAD, false);
+        Log.d(TAG, "loading more: " + posts.size());
     }
 
 
-    private void queryPosts(){
+    private void queryPosts(int numResultsToSkip, int numberOfResults, boolean notifyEntireDataSet){
         // get an object for querying posts
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 
         // include data referred by user key
         query.include(Post.KEY_USER);
 
-        query.setLimit(20); // 20 latest
+        query.setSkip(numResultsToSkip);
+        query.setLimit(numberOfResults); // 20 latest
 
         query.addDescendingOrder("createdAt"); // newest first
 
@@ -107,9 +135,14 @@ public class TimelineFragment extends Fragment {
                     return;
                 }
                 posts.addAll(objects);
-                adapter.notifyDataSetChanged();
-
+                if (notifyEntireDataSet){
+                    adapter.notifyDataSetChanged();
+                } else {
+                    // notify just the range...
+                    adapter.notifyItemRangeInserted(numResultsToSkip, numberOfResults);
+                }
                 swipeContainer.setRefreshing(false);
+
             }
         });
 
