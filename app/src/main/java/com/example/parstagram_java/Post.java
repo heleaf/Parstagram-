@@ -82,19 +82,19 @@ public class Post extends ParseObject {
         return "";
     }
 
-//    public String profileImgUrl = getProfileUrl(getParseUser(KEY_USER).getObjectId());
+    public String getProfileImgUrl() { return getProfileUrl(getUser().getUsername()); }
 
-    // Create a gravatar image based on the hash value obtained from userId
-//    private static String getProfileUrl(final String userId) {
-//        String hex = "";
-//        try {
-//            final MessageDigest digest = MessageDigest.getInstance("MD5");
-//            final byte[] hash = digest.digest(userId.getBytes());
-//            final BigInteger bigInt = new BigInteger(hash);
-//            hex = bigInt.abs().toString(16);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return "https://www.gravatar.com/avatar/" + hex + "?d=identicon";
-//    }
+    //  Create a gravatar image based on the hash value obtained from userId
+    private static String getProfileUrl(final String userId) {
+        String hex = "";
+        try {
+            final MessageDigest digest = MessageDigest.getInstance("MD5");
+            final byte[] hash = digest.digest(userId.getBytes());
+            final BigInteger bigInt = new BigInteger(hash);
+            hex = bigInt.abs().toString(16);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "https://www.gravatar.com/avatar/" + hex + "?d=identicon";
+    }
 }

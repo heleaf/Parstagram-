@@ -78,11 +78,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             description.setText(post.getDescription());
 
-             relativeTimeStamp.setText(post.getRelativeTimeCreated());
+            relativeTimeStamp.setText(post.getRelativeTimeCreated());
 
-//            if (post.profileImgUrl != null){
-//                Glide.with(context).load(post.profileImgUrl).circleCrop().into(profilePhoto);
-//            }
+            String profileImgUrl = post.getProfileImgUrl();
+            if (profileImgUrl != null){
+                Glide.with(context).load(profileImgUrl).circleCrop().into(profilePhoto);
+            }
 
         }
     }
