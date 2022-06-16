@@ -1,6 +1,5 @@
 package com.example.parstagram_java.Fragments;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.example.parstagram_java.Adapters.GridViewPostAdapter;
 import com.example.parstagram_java.Adapters.ProfilePostAdapter;
+import com.example.parstagram_java.EndlessRecyclerViewScrollListener;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
 import com.parse.FindCallback;
@@ -35,17 +35,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NicerProfileFragment extends Fragment {
-    public static final int RESULTS_PER_LOAD = 10;
+    public static final int RESULTS_PER_LOAD = 9;
     private static final String TAG = "NicerProfileFragment";
 
     RecyclerView rvProfilePosts;
     ProfilePostAdapter adapter;
-    SwipeRefreshLayout swipeContainer;
     List<Post> posts;
     ParseUser profileUser;
     boolean showBackButton;
     MenuItem backToFeedButton;
     Fragment prevFragment;
+
+    EndlessRecyclerViewScrollListener scrollListener;
 
     public NicerProfileFragment(){
         this.profileUser = ParseUser.getCurrentUser();
@@ -98,16 +99,37 @@ public class NicerProfileFragment extends Fragment {
         adapter = new ProfilePostAdapter(getContext(), posts);
 
         // TODO: set on item click listener for the adapter?
+        adapter.setOnItemClickListener(new ProfilePostAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                // find the post
+                Post post = posts.get(position);
+                Fragment fragment = new PostDetail(post, NicerProfileFragment.this);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, fragment);
+                fragmentTransaction.commit();
+            }
+        });
 
         rvProfilePosts.setAdapter(adapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
         rvProfilePosts.setLayoutManager(gridLayoutManager);
 
-        // TODO: endless scroll
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                queryProfilePosts(posts.size(), RESULTS_PER_LOAD, false);
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvProfilePosts.addOnScrollListener(scrollListener);
 
         // TODO: Swipe container
-//        swipeContainer = view.findViewById(R.id.profileSwipeContainer);
 
         ImageView profileImg = view.findViewById(R.id.profileProfilePhoto);
         String profileImgUrl = Post.getProfileUrl(profileUser.getUsername());

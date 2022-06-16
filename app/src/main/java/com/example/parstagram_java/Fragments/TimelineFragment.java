@@ -113,7 +113,9 @@ public class TimelineFragment extends Fragment {
             public void onProfilePhotoClick(View itemView, int position) {
                 Post post = posts.get(position);
                 ParseUser user = post.getUser();
-                Fragment profileFragment = new ProfileFragment(user, true, TimelineFragment.this);
+//                Fragment profileFragment = new ProfileFragment(user, true, TimelineFragment.this);
+                Fragment profileFragment = new NicerProfileFragment(user,
+                        true, TimelineFragment.this);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.flContainer, profileFragment);

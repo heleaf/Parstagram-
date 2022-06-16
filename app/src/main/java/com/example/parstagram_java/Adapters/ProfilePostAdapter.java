@@ -25,6 +25,9 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
     Context context;
     List<Post> posts;
 
+    // Define listener member variable
+    private OnItemClickListener postListener;
+
     public ProfilePostAdapter(Context context, List<Post> posts){
         this.context = context;
         this.posts = posts;
@@ -34,7 +37,7 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.grid_profile_item, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, postListener);
     }
 
     @Override
@@ -48,20 +51,37 @@ public class ProfilePostAdapter extends RecyclerView.Adapter<ProfilePostAdapter.
         return posts.size();
     }
 
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.postListener = listener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
-        final int MEDIA_HEIGHT = (Resources.getSystem().getDisplayMetrics().widthPixels / 3);
+        final int MEDIA_SIZE = (Resources.getSystem().getDisplayMetrics().widthPixels / 3);
 
         ImageView postPhoto;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, OnItemClickListener clickListener) {
             super(itemView);
             postPhoto = itemView.findViewById(R.id.profileGridSquarePhoto);
 
-//            int width =
             ViewGroup.LayoutParams params = postPhoto.getLayoutParams();
-            params.height = MEDIA_HEIGHT;
-            params.width = MEDIA_HEIGHT;
+            params.height = MEDIA_SIZE;
+            params.width = MEDIA_SIZE;
             postPhoto.setLayoutParams(params);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (clickListener == null) return;
+                    clickListener.onItemClick(itemView, getAdapterPosition());
+                }
+            });
         }
 
         public void bind(Post post) {
