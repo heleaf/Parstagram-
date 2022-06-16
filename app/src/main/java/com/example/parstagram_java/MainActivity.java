@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.actionProfile:
                         Log.d(TAG, "action button");
-
                         fragment = new ProfileFragment();
                         break;
                     default:
@@ -93,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.findItem(R.id.backToFeed).setVisible(false);
         return true;
     }
 
@@ -101,9 +101,12 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.logOutFromMenu){
             // log out the user
             ParseUser.logOutInBackground();
-            Log.d("MainActivity", String.valueOf(ParseUser.getCurrentUser()));
+            Log.d(TAG, String.valueOf(ParseUser.getCurrentUser()));
             finish();
             return true;
+        }
+        if (item.getItemId() == R.id.backToFeed){
+            Log.d(TAG, "wtf");
         }
         return super.onOptionsItemSelected(item);
     }

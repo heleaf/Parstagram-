@@ -5,12 +5,17 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -23,6 +28,7 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,16 +41,34 @@ public class TimelineFragment extends Fragment {
     List<Post> posts;
     SwipeRefreshLayout swipeContainer;
 
+    Post startPost;
+
     // Store a member variable for the listener
     EndlessRecyclerViewScrollListener scrollListener;
 
     public TimelineFragment() {
         // Required empty public constructor
+        this.startPost = null;
     }
+
+    public TimelineFragment(Post startPost){
+        this.startPost = startPost;
+    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+        @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        MenuItem back = menu.findItem(R.id.backToFeed);
+        back.setVisible(false);
+        back.setEnabled(false);
     }
 
     @Override
@@ -57,10 +81,30 @@ public class TimelineFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         rvPosts = view.findViewById(R.id.rvPosts);
         posts = new ArrayList<>();
         adapter = new PostAdapter(getContext(), posts);
+        adapter.setOnItemClickListener(new PostAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                if (itemView == null){
+                    Log.d(TAG, "clicked null item");
+                    return;
+                }
+                Post post = posts.get(position);
+                Log.d(TAG, "Post at position " + position + " clicked: " + post.getDescription());
+
+                // send this post to the postDetail fragment
+                // move to the postDetail fragment
+                Log.d(TAG, "trying post detail");
+                Fragment fragment = new PostDetail(post, TimelineFragment.this);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, fragment);
+                fragmentTransaction.commit();
+            }
+        });
+
         rvPosts.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvPosts.setLayoutManager(linearLayoutManager);

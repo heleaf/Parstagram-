@@ -2,6 +2,13 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/backToFeed"
+        android:enabled="true"
+        android:icon="?attr/actionModeCloseDrawable"
+        android:title="Back"
+        android:visible="true"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/logOutFromMenu"
         android:title="Log Out"
         app:showAsAction="always" />
