@@ -86,7 +86,7 @@ public class Post extends ParseObject {
     public String getProfileImgUrl() { return getProfileUrl(getUser().getUsername()); }
 
     //  Create a gravatar image based on the hash value obtained from userId
-    private static String getProfileUrl(final String userId) {
+    public static String getProfileUrl(final String userId) {
         String hex = "";
         try {
             final MessageDigest digest = MessageDigest.getInstance("MD5");

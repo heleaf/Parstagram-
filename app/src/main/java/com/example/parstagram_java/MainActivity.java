@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.parstagram_java.Fragments.ComposeFragment;
+import com.example.parstagram_java.Fragments.NicerProfileFragment;
 import com.example.parstagram_java.Fragments.ProfileFragment;
 import com.example.parstagram_java.Fragments.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavBar);
         homeFragment = new TimelineFragment();
         composeFragment = new ComposeFragment();
-        currentUserProfileFragment = new ProfileFragment(ParseUser.getCurrentUser(), false, null);
+        currentUserProfileFragment = new NicerProfileFragment(ParseUser.getCurrentUser(), false, null);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

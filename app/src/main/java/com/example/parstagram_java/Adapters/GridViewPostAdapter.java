@@ -13,14 +13,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
+import com.example.parstagram_java.Viewholders.ProfilePostAdapterViewholder;
 import com.parse.ParseFile;
 
 import java.util.List;
 
-public class GridViewPostAdapter extends RecyclerView.Adapter<GridViewPostAdapter.ViewHolder>{
+public class GridViewPostAdapter extends RecyclerView.Adapter<ProfilePostAdapterViewholder>{
 
     Context context;
     List<Post> posts;
+    // Define listener member variable
+//    private PostAdapter.OnItemClickListener listener;
+//    private PostAdapter.OnProfilePhotoClickListener profilePhotoClickListener;
 
     public GridViewPostAdapter(Context context, List<Post> posts){
         this.context = context;
@@ -29,13 +33,13 @@ public class GridViewPostAdapter extends RecyclerView.Adapter<GridViewPostAdapte
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ProfilePostAdapterViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.timeline_item, parent, false);
-        return new GridViewPostAdapter.ViewHolder(view);
+        return new ProfilePostAdapterViewholder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ProfilePostAdapterViewholder holder, int position) {
         Post post = posts.get(position);
         holder.bind(post);
     }
@@ -43,41 +47,6 @@ public class GridViewPostAdapter extends RecyclerView.Adapter<GridViewPostAdapte
     @Override
     public int getItemCount() {
         return posts.size();
-    }
-
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView username;
-        ImageView postPhoto;
-        ImageView profilePhoto;
-        TextView description;
-        TextView relativeTimeStamp;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            username = itemView.findViewById(R.id.timelineUsername);
-            postPhoto = itemView.findViewById(R.id.timelinePostPhoto);
-            profilePhoto = itemView.findViewById(R.id.timelineProfilePhoto);
-            description = itemView.findViewById(R.id.timelineDescription);
-            relativeTimeStamp = itemView.findViewById(R.id.timelineRelativeTimeStamp);
-        }
-
-        public void bind(Post post) {
-            // just bind the image
-            // bind it as a square
-
-            ParseFile postImg = post.getImage();
-
-            if (postImg != null){
-                Glide.with(context).load(postImg.getUrl()).into(postPhoto);
-                postPhoto.setVisibility(View.VISIBLE);
-            }
-
-            username.setVisibility(View.GONE);
-            description.setVisibility(View.GONE);
-            relativeTimeStamp.setVisibility(View.GONE);
-            profilePhoto.setVisibility(View.GONE);
-
-        }
     }
 
 }
