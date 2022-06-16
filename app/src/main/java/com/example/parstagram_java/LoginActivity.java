@@ -3,6 +3,7 @@ package com.example.parstagram_java;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -29,6 +30,8 @@ public final class LoginActivity extends AppCompatActivity {
     EditText mPassword;
     @Nullable
     Button mLoginButton;
+    @Nullable
+    Button mSignUpButton;
 
     @Nullable
     public final EditText getMUserName() {
@@ -68,13 +71,12 @@ public final class LoginActivity extends AppCompatActivity {
         this.mUserName = (EditText)this.findViewById(R.id.etUsername);
         this.mPassword = (EditText)this.findViewById(R.id.etPassword);
         this.mLoginButton = (Button)this.findViewById(R.id.logInButton);
-    }
+        this.mSignUpButton = (Button)this.findViewById(R.id.signUpButton);
 
-    protected void onStart() {
-        super.onStart();
-        if (mLoginButton == null || mUserName == null || mPassword == null)
+        if (mLoginButton == null || mUserName == null || mPassword == null || mSignUpButton == null)
             // make a toast here
             return;
+
         mLoginButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +86,16 @@ public final class LoginActivity extends AppCompatActivity {
             }
         });
 
+        mSignUpButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(i);
+            }
+        });
     }
+
+
 
     private void loginUser(String usernameText, String passwordText){
         Log.d(TAG, "attempting to log in");
@@ -108,7 +119,7 @@ public final class LoginActivity extends AppCompatActivity {
     }
 
     private void goMainActivity(){
-        Intent i = new Intent(LoginActivity.this, MainActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
         finish();
     }

@@ -22,9 +22,9 @@ public class GridViewPostAdapter extends RecyclerView.Adapter<GridViewPostAdapte
     Context context;
     List<Post> posts;
 
-    public GridViewPostAdapter(Context c, List<Post> p){
-        context = c;
-        posts = p;
+    public GridViewPostAdapter(Context context, List<Post> posts){
+        this.context = context;
+        this.posts = posts;
     }
 
     @NonNull

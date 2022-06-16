@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.parstagram_java" >
+    package="com.example.parstagram_java">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -16,15 +16,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ParstagramJava"
-        tools:targetApi="31" >
-<!--        <activity-->
-<!--            android:name=".TimelineActivity"-->
-<!--            android:exported="false" /> &lt;!&ndash; make sure within the application tag, otherwise app will crash with XmlResourceParser errors &ndash;&gt;-->
+        tools:targetApi="31">
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="false" />
+        <!-- <activity -->
+        <!-- android:name=".TimelineActivity" -->
+        <!-- android:exported="false" /> &lt;!&ndash; make sure within the application tag, otherwise app will crash with XmlResourceParser errors &ndash;&gt; -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.codepath.hfyfileprovider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider" />
@@ -35,7 +38,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -27,9 +27,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     // Define listener member variable
     private OnItemClickListener listener;
 
-    public PostAdapter(Context c, List<Post> p){
-        context = c;
-        posts = p;
+    public PostAdapter(Context context, List<Post> posts){
+        this.context = context;
+        this.posts = posts;
     }
 
     @NonNull
@@ -106,11 +106,5 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         }
 
-//        @Override
-//        public void onClick(View v) {
-//            FragmentManager fragmentManager = context.getActivity().getSupportFragmentManager();
-////            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentManager.popBackStack();
-//        }
     }
 }

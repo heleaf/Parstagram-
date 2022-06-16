@@ -176,7 +176,11 @@ public class ComposeFragment extends Fragment {
         post.setDescription(descriptionText);
         post.setUser(currUser);
         post.setImage(new ParseFile(photoFile));
-        progressBar.setVisibility(ProgressBar.VISIBLE);
+
+        if (progressBar != null) {
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+        }
+
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -195,7 +199,9 @@ public class ComposeFragment extends Fragment {
                     mDescription.setVisibility(View.GONE);
                 }
 
-                progressBar.setVisibility(ProgressBar.INVISIBLE);
+                if (progressBar != null){
+                    progressBar.setVisibility(ProgressBar.INVISIBLE);
+                }
                 // switch to timeline fragment???
 //                getActivity().getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.flContainer, new TimelineFragment()).commit();

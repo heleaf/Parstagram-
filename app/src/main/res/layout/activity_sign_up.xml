@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    tools:context=".LoginActivity">
+    tools:context=".SignUpActivity">
 
     <ImageView
-        android:id="@+id/igLogoLogin"
+        android:id="@+id/igLogoSignUp"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
@@ -18,47 +18,61 @@
         app:srcCompat="@drawable/ig_icon" />
 
     <EditText
-        android:id="@+id/etUsername"
+        android:id="@+id/etUsernameSignUp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
-        android:hint="Username"
+        android:hint="New Username"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/igLogoLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/igLogoSignUp" />
 
     <EditText
-        android:id="@+id/etPassword"
+        android:id="@+id/etPasswordSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="New Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUsername" />
+        app:layout_constraintTop_toBottomOf="@+id/etUsernameSignUp" />
 
-    <Button
-        android:id="@+id/logInButton"
-        android:layout_width="0dp"
+    <EditText
+        android:id="@+id/etEmailAddressSignUp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
-        android:text="Log In"
+        android:ems="10"
+        android:hint="Email Address"
+        android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/etPasswordSignUp" />
+
+<!--    <Button-->
+<!--        android:id="@+id/logInButton"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="20dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        android:text="Log In"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/etEmailAddress" />-->
 
     <Button
-        android:id="@+id/signUpButton"
+        android:id="@+id/signUpSubmitButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -67,6 +81,6 @@
         android:text="Sign Up"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logInButton" />
+        app:layout_constraintTop_toBottomOf="@+id/etEmailAddressSignUp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
