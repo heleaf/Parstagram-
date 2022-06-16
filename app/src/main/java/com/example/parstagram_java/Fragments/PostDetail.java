@@ -26,6 +26,7 @@ import com.example.parstagram_java.Adapters.PostAdapter;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -72,12 +73,26 @@ public class PostDetail extends Fragment {
         posts = new ArrayList<>();
         posts.add(post);
         adapter = new PostAdapter(getContext(), posts);
-        adapter.setOnItemClickListener(new PostAdapter.OnItemClickListener() {
-               @Override
-               public void onItemClick(View itemView, int position) {
+//        adapter.setOnItemClickListener(new PostAdapter.OnItemClickListener() {
+//               @Override
+//               public void onItemClick(View itemView, int position) {
+//
+//               }
+//           });
 
-               }
-           });
+        adapter.setOnProfilePhotoClickListener(new PostAdapter.OnProfilePhotoClickListener() {
+            @Override
+            public void onProfilePhotoClick(View itemView, int position) {
+                Post post = posts.get(position);
+                ParseUser user = post.getUser();
+                Fragment profileFragment = new ProfileFragment(user, true, PostDetail.this);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, profileFragment);
+                fragmentTransaction.commit();
+            }
+        });
+
         rvPost.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvPost.setLayoutManager(linearLayoutManager);

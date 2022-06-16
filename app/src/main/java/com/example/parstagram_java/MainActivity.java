@@ -45,33 +45,39 @@ public class MainActivity extends AppCompatActivity {
     @Nullable BottomNavigationView bottomNavigationView;
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
+    Fragment homeFragment;
+    Fragment composeFragment;
+    Fragment currentUserProfileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bottomNavigationView = findViewById(R.id.bottomNavBar);
-
+        homeFragment = new TimelineFragment();
+        composeFragment = new ComposeFragment();
+        currentUserProfileFragment = new ProfileFragment(ParseUser.getCurrentUser(), false, null);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment fragment;
+                // TODO: don't make a new fragment every time... store them
                 switch (item.getItemId()){
                     case R.id.actionHome:
                         Log.d(TAG, "home button");
                         // nope
-                        fragment = new TimelineFragment();
+                        fragment = homeFragment; // TimelineFragment();
                         break;
                     case R.id.actionCreate:
                         Log.d(TAG, "create button");
-                        fragment = new ComposeFragment();
+                        fragment = composeFragment; // ComposeFragment();
                         break;
                     case R.id.actionProfile:
                         Log.d(TAG, "action button");
-                        fragment = new ProfileFragment(ParseUser.getCurrentUser(), false);
+                        fragment = currentUserProfileFragment;// ProfileFragment(ParseUser.getCurrentUser(), false);
                         break;
                     default:
-                        fragment = new ComposeFragment();
+                        fragment = homeFragment; // ComposeFragment();
                         break;
                 }
                 fragmentManager.beginTransaction().replace(R.id.flContainer, fragment).commit();

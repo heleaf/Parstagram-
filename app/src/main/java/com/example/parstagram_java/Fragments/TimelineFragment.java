@@ -62,7 +62,6 @@ public class TimelineFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
@@ -114,7 +113,7 @@ public class TimelineFragment extends Fragment {
             public void onProfilePhotoClick(View itemView, int position) {
                 Post post = posts.get(position);
                 ParseUser user = post.getUser();
-                Fragment profileFragment = new ProfileFragment(user, true);
+                Fragment profileFragment = new ProfileFragment(user, true, TimelineFragment.this);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.flContainer, profileFragment);

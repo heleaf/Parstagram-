@@ -45,10 +45,12 @@ public class ProfileFragment extends TimelineFragment {
     ParseUser profileUser;
     boolean showBackButton;
     MenuItem backToFeedButton;
+    Fragment prevFragment;
 
-    public ProfileFragment(ParseUser profileUser, boolean showBackButton){
+    public ProfileFragment(ParseUser profileUser, boolean showBackButton, Fragment prevFragment){
         this.profileUser = profileUser == null ? ParseUser.getCurrentUser() : profileUser;
         this.showBackButton = showBackButton;
+        this.prevFragment = prevFragment == null ? new TimelineFragment() : prevFragment;
     }
 
     @Override
@@ -70,7 +72,7 @@ public class ProfileFragment extends TimelineFragment {
         if (item.getItemId() == R.id.backToFeed){
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction().
-                    replace(R.id.flContainer, new TimelineFragment()).commit();
+                    replace(R.id.flContainer, prevFragment).commit();
         }
         super.onOptionsItemSelected(item);
         return true;
@@ -108,9 +110,7 @@ public class ProfileFragment extends TimelineFragment {
 
             }
         });
-
     }
-
 
 
     @Override

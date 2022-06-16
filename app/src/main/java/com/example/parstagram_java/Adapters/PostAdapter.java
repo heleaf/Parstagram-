@@ -91,6 +91,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (clickListener == null) return;
                     clickListener.onItemClick(itemView, getAdapterPosition());
                 }
             });
@@ -98,6 +99,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             profilePhoto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (profilePhotoClickListener == null) return;
                     profilePhotoClickListener.onProfilePhotoClick(itemView, getAdapterPosition());
                 }
             });
