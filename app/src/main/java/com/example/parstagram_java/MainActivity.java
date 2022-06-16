@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.actionProfile:
                         Log.d(TAG, "action button");
-                        fragment = new ProfileFragment();
+                        fragment = new ProfileFragment(ParseUser.getCurrentUser(), false);
                         break;
                     default:
                         fragment = new ComposeFragment();

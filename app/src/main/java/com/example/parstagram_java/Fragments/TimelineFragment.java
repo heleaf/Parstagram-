@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,8 +26,11 @@ import com.example.parstagram_java.Post;
 import com.example.parstagram_java.Adapters.PostAdapter;
 import com.example.parstagram_java.R;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -105,6 +109,19 @@ public class TimelineFragment extends Fragment {
             }
         });
 
+        adapter.setOnProfilePhotoClickListener(new PostAdapter.OnProfilePhotoClickListener() {
+            @Override
+            public void onProfilePhotoClick(View itemView, int position) {
+                Post post = posts.get(position);
+                ParseUser user = post.getUser();
+                Fragment profileFragment = new ProfileFragment(user, true);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, profileFragment);
+                fragmentTransaction.commit();
+            }
+        });
+
         rvPosts.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvPosts.setLayoutManager(linearLayoutManager);
@@ -157,7 +174,8 @@ public class TimelineFragment extends Fragment {
     }
 
 
-    protected void queryPosts(int numResultsToSkip, int numberOfResults, boolean notifyEntireDataSet){
+    protected void queryPosts(int numResultsToSkip, int numberOfResults, boolean notifyEntireDataSet
+                              ){
         // get an object for querying posts
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 

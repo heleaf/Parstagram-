@@ -6,14 +6,19 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,15 +30,51 @@ import com.example.parstagram_java.EndlessRecyclerViewScrollListener;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends TimelineFragment {
     // GridViewPostAdapter gridAdapter;
+
+    ParseUser profileUser;
+    boolean showBackButton;
+    MenuItem backToFeedButton;
+
+    public ProfileFragment(ParseUser profileUser, boolean showBackButton){
+        this.profileUser = profileUser == null ? ParseUser.getCurrentUser() : profileUser;
+        this.showBackButton = showBackButton;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(this.showBackButton);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        backToFeedButton = menu.findItem(R.id.backToFeed);
+        backToFeedButton.setVisible(this.showBackButton);
+        backToFeedButton.setEnabled(this.showBackButton);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.backToFeed){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().
+                    replace(R.id.flContainer, new TimelineFragment()).commit();
+        }
+        super.onOptionsItemSelected(item);
+        return true;
+    }
 
     @Override
     protected void queryPosts(int numResultsToSkip, int numberOfResults, boolean notifyEntireDataSet) {
@@ -41,7 +82,7 @@ public class ProfileFragment extends TimelineFragment {
 
         // include data referred by user key
         query.include(Post.KEY_USER);
-        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        query.whereEqualTo(Post.KEY_USER, profileUser);
         query.setSkip(numResultsToSkip);
         query.setLimit(numberOfResults); // 20 latest
 

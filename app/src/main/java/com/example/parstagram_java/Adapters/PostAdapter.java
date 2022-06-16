@@ -8,11 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram_java.Fragments.ProfileFragment;
+import com.example.parstagram_java.Fragments.TimelineFragment;
 import com.example.parstagram_java.MainActivity;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
@@ -26,6 +29,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     List<Post> posts;
     // Define listener member variable
     private OnItemClickListener listener;
+    private OnProfilePhotoClickListener profilePhotoClickListener;
 
     public PostAdapter(Context context, List<Post> posts){
         this.context = context;
@@ -61,6 +65,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.listener = listener;
     }
 
+    public interface OnProfilePhotoClickListener {
+        void onProfilePhotoClick(View itemView, int position);
+    }
+
+    public void setOnProfilePhotoClickListener(OnProfilePhotoClickListener profilePhotoClickListener) {
+        this.profilePhotoClickListener = profilePhotoClickListener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView username;
         ImageView postPhoto;
@@ -82,8 +94,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     clickListener.onItemClick(itemView, getAdapterPosition());
                 }
             });
-        }
 
+            profilePhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    profilePhotoClickListener.onProfilePhotoClick(itemView, getAdapterPosition());
+                }
+            });
+        }
 
         public void bind(Post post) {
             // set the text and glide and stuff
