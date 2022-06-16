@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.parstagram_java.Fragments.ComposeFragment;
+import com.example.parstagram_java.Fragments.ProfileFragment;
 import com.example.parstagram_java.Fragments.TimelineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.actionProfile:
                         Log.d(TAG, "action button");
 
-                        fragment = new ComposeFragment();
+                        fragment = new ProfileFragment();
                         break;
                     default:
                         fragment = new ComposeFragment();

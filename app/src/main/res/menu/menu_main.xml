@@ -3,7 +3,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/logOutFromMenu"
-        android:icon="@drawable/media_option_button"
         android:title="Log Out"
         app:showAsAction="always" />
 </menu>

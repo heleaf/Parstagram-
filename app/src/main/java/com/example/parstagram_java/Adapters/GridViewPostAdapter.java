@@ -1,8 +1,6 @@
-package com.example.parstagram_java;
+package com.example.parstagram_java.Adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +11,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram_java.Post;
+import com.example.parstagram_java.R;
 import com.parse.ParseFile;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
+public class GridViewPostAdapter extends RecyclerView.Adapter<GridViewPostAdapter.ViewHolder>{
 
     Context context;
     List<Post> posts;
 
-    public PostAdapter(Context c, List<Post> p){
+    public GridViewPostAdapter(Context c, List<Post> p){
         context = c;
         posts = p;
     }
@@ -32,9 +30,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // return a new viewHolder
         View view = LayoutInflater.from(context).inflate(R.layout.timeline_item, parent, false);
-        return new ViewHolder(view);
+        return new GridViewPostAdapter.ViewHolder(view);
     }
 
     @Override
@@ -64,27 +61,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             relativeTimeStamp = itemView.findViewById(R.id.timelineRelativeTimeStamp);
         }
 
-
-
         public void bind(Post post) {
-            // set the text and glide and stuff
-            username.setText(post.getUser().getUsername());
+            // just bind the image
+            // bind it as a square
 
             ParseFile postImg = post.getImage();
 
             if (postImg != null){
                 Glide.with(context).load(postImg.getUrl()).into(postPhoto);
+                postPhoto.setVisibility(View.VISIBLE);
             }
 
-            description.setText(post.getDescription());
-
-            relativeTimeStamp.setText(post.getRelativeTimeCreated());
-
-            String profileImgUrl = post.getProfileImgUrl();
-            if (profileImgUrl != null){
-                Glide.with(context).load(profileImgUrl).circleCrop().into(profilePhoto);
-            }
+            username.setVisibility(View.GONE);
+            description.setVisibility(View.GONE);
+            relativeTimeStamp.setVisibility(View.GONE);
+            profilePhoto.setVisibility(View.GONE);
 
         }
     }
+
 }

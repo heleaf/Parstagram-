@@ -17,7 +17,7 @@ import android.widget.Toast;
 
 import com.example.parstagram_java.EndlessRecyclerViewScrollListener;
 import com.example.parstagram_java.Post;
-import com.example.parstagram_java.PostAdapter;
+import com.example.parstagram_java.Adapters.PostAdapter;
 import com.example.parstagram_java.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -36,7 +36,7 @@ public class TimelineFragment extends Fragment {
     SwipeRefreshLayout swipeContainer;
 
     // Store a member variable for the listener
-    private EndlessRecyclerViewScrollListener scrollListener;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     public TimelineFragment() {
         // Required empty public constructor
@@ -88,6 +88,7 @@ public class TimelineFragment extends Fragment {
                 // once the network request has completed successfully.
                 posts.clear();
                 queryPosts(0, RESULTS_PER_LOAD, true);
+                scrollListener.resetState();
             }
         });
         // Configure the refreshing colors
@@ -100,7 +101,7 @@ public class TimelineFragment extends Fragment {
     }
 
     // Append the next page of data into the adapter
-    private void loadNextDataFromApi(int offset) {
+    protected void loadNextDataFromApi(int offset) {
         // Send an API request to retrieve appropriate paginated data
         //  --> Send the request including an offset value (i.e `page`) as a query parameter.
         //  --> Deserialize and construct new model objects from the API response
@@ -112,7 +113,7 @@ public class TimelineFragment extends Fragment {
     }
 
 
-    private void queryPosts(int numResultsToSkip, int numberOfResults, boolean notifyEntireDataSet){
+    protected void queryPosts(int numResultsToSkip, int numberOfResults, boolean notifyEntireDataSet){
         // get an object for querying posts
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
 
@@ -122,7 +123,7 @@ public class TimelineFragment extends Fragment {
         query.setSkip(numResultsToSkip);
         query.setLimit(numberOfResults); // 20 latest
 
-        query.addDescendingOrder("createdAt"); // newest first
+        query.addDescendingOrder(Post.KEY_CREATED_AT); // newest first
 
         query.findInBackground(new FindCallback<Post>() {
             @Override
