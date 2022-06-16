@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.parstagram_java.Post;
@@ -48,6 +49,7 @@ public class ComposeFragment extends Fragment {
     @Nullable Button mTakePictureButton;
     @Nullable Button mSubmitPostButton;
     @Nullable File photoFile;
+    @Nullable ProgressBar progressBar;
 
     public ComposeFragment() {
         // Required empty public constructor
@@ -76,6 +78,7 @@ public class ComposeFragment extends Fragment {
         mIvPicture = view.findViewById(R.id.postPicture);
         mTakePictureButton = view.findViewById(R.id.takePictureButton);
         mSubmitPostButton = view.findViewById(R.id.submitPostButton);
+        progressBar = view.findViewById(R.id.pbLoading);
 
         if (mTakePictureButton == null) return;
         mTakePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -173,22 +176,26 @@ public class ComposeFragment extends Fragment {
         post.setDescription(descriptionText);
         post.setUser(currUser);
         post.setImage(new ParseFile(photoFile));
+        progressBar.setVisibility(ProgressBar.VISIBLE);
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
                     Log.e(TAG, "Error saving post", e);
                     Toast.makeText(getContext(), "Error saving post: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    return;
+//                    return;
+                } else if (mDescription != null &&
+                    mIvPicture != null && mTakePictureButton != null
+                    && mSubmitPostButton != null) {
+                    mDescription.setText(""); // clear the description
+                    Toast.makeText(getContext(), "yay submitted post", Toast.LENGTH_LONG).show();
+                    mIvPicture.setImageResource(0); // remove the image
+                    mTakePictureButton.setText("Take Picture");
+                    mSubmitPostButton.setVisibility(View.GONE);
+                    mDescription.setVisibility(View.GONE);
                 }
-                if (mDescription == null) return;
-                mDescription.setText(""); // clear the description
-                Toast.makeText(getContext(), "yay submitted post", Toast.LENGTH_LONG).show();
-                mIvPicture.setImageResource(0); // remove the image
-                mTakePictureButton.setText("Take Picture");
-                mSubmitPostButton.setVisibility(View.GONE);
-                mDescription.setVisibility(View.GONE);
 
+                progressBar.setVisibility(ProgressBar.INVISIBLE);
                 // switch to timeline fragment???
 //                getActivity().getSupportFragmentManager().beginTransaction()
 //                        .replace(R.id.flContainer, new TimelineFragment()).commit();

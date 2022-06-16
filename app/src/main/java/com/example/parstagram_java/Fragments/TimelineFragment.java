@@ -34,7 +34,7 @@ import java.util.List;
 
 public class TimelineFragment extends Fragment {
     public static final String TAG = "TimelineFragment";
-    public static final int RESULTS_PER_LOAD = 5;
+    public static final int RESULTS_PER_LOAD = 10;
 
     RecyclerView rvPosts;
     PostAdapter adapter;
