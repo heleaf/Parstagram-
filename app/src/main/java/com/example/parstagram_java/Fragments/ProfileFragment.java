@@ -19,7 +19,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram_java.Adapters.ProfilePostAdapter;
@@ -34,7 +33,7 @@ import com.parse.ParseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NicerProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment {
     public static final int RESULTS_PER_LOAD = 9;
     private static final String TAG = "NicerProfileFragment";
 
@@ -48,13 +47,13 @@ public class NicerProfileFragment extends Fragment {
 
     EndlessRecyclerViewScrollListener scrollListener;
 
-    public NicerProfileFragment(){
+    public ProfileFragment(){
         this.profileUser = ParseUser.getCurrentUser();
         this.showBackButton = false;
         this.prevFragment = null;
     }
 
-    public NicerProfileFragment(ParseUser profileUser, boolean showBackButton, Fragment prevFragment){
+    public ProfileFragment(ParseUser profileUser, boolean showBackButton, Fragment prevFragment){
         this.profileUser = profileUser == null ? ParseUser.getCurrentUser() : profileUser;
         this.showBackButton = showBackButton;
         this.prevFragment = prevFragment;
@@ -104,7 +103,7 @@ public class NicerProfileFragment extends Fragment {
             public void onItemClick(View itemView, int position) {
                 // find the post
                 Post post = posts.get(position);
-                Fragment fragment = new PostDetail(post, NicerProfileFragment.this);
+                Fragment fragment = new PostDetail(post, ProfileFragment.this);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.flContainer, fragment);

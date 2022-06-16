@@ -18,17 +18,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.parstagram_java.Adapters.PostAdapter;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
-import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +81,7 @@ public class PostDetail extends Fragment {
                 Post post = posts.get(position);
                 ParseUser user = post.getUser();
 //                Fragment profileFragment = new ProfileFragment(user, true, PostDetail.this);
-                Fragment profileFragment = new NicerProfileFragment(user,
+                Fragment profileFragment = new ProfileFragment(user,
                         true, PostDetail.this);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
