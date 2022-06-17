@@ -23,10 +23,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.parstagram_java.Comment;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -173,34 +175,51 @@ public class ComposeFragment extends Fragment {
         post.setImage(new ParseFile(photoFile));
         post.setLikes(0);
 
+        ParseRelation<Comment> comments = post.getComments();
+        Comment newComment = new Comment();
+        newComment.setAuthor(ParseUser.getCurrentUser().getUsername());
+        newComment.setMessage(descriptionText);
+
         if (progressBar != null) {
             progressBar.setVisibility(ProgressBar.VISIBLE);
         }
 
-        post.saveInBackground(new SaveCallback() {
+        newComment.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Error saving post", e);
-                    Toast.makeText(getContext(), "Error saving post: " + e.getMessage(), Toast.LENGTH_LONG).show();
-//                    return;
-                } else if (mDescription != null &&
-                    mIvPicture != null && mTakePictureButton != null
-                    && mSubmitPostButton != null) {
-                    mDescription.setText(""); // clear the description
-                    Toast.makeText(getContext(), "yay submitted post", Toast.LENGTH_LONG).show();
-                    mIvPicture.setImageResource(0); // remove the image
-                    mTakePictureButton.setText("Take Picture");
-                    mSubmitPostButton.setVisibility(View.GONE);
-                    mDescription.setVisibility(View.GONE);
-                }
-
-                if (progressBar != null){
+                if (e != null){
+                    Toast.makeText(getContext(),
+                            "error saving comment: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(ProgressBar.INVISIBLE);
+                    return;
                 }
-                // switch to timeline fragment???
-//                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.flContainer, new TimelineFragment()).commit();
+                comments.add(newComment);
+
+                post.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null) {
+                            Log.e(TAG, "Error saving post", e);
+                            Toast.makeText(getContext(), "Error saving post: " + e.getMessage(), Toast.LENGTH_LONG).show();
+
+                        } else if (mDescription != null &&
+                                mIvPicture != null && mTakePictureButton != null
+                                && mSubmitPostButton != null) {
+
+                            mDescription.setText(""); // clear the description
+                            Toast.makeText(getContext(), "yay submitted post", Toast.LENGTH_LONG).show();
+                            mIvPicture.setImageResource(0); // remove the image
+                            mTakePictureButton.setText("Take Picture");
+                            mSubmitPostButton.setVisibility(View.GONE);
+                            mDescription.setVisibility(View.GONE);
+                        }
+
+                        if (progressBar != null){
+                            progressBar.setVisibility(ProgressBar.INVISIBLE);
+                        }
+                    }
+                });
             }
         });
     }

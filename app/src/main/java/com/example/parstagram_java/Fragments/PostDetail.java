@@ -90,6 +90,9 @@ public class PostDetail extends Fragment {
         adapter.setOnProfilePhotoClickListener(PostAdapter.getNewOnProfilePhotoClickListener(posts,
                 getActivity(), PostDetail.this));
 
+        adapter.setOnCommentClickListener(PostAdapter.getNewOnCommentClickListener(posts,
+                getActivity(), PostDetail.this));
+
         rvPost.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvPost.setLayoutManager(linearLayoutManager);

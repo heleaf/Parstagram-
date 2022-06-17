@@ -83,6 +83,10 @@ public class TimelineFragment extends Fragment {
                 posts, getActivity(), TimelineFragment.this
         ));
 
+        adapter.setOnCommentClickListener(PostAdapter.getNewOnCommentClickListener(
+                posts, getActivity(), TimelineFragment.this
+        ));
+
         rvPosts.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rvPosts.setLayoutManager(linearLayoutManager);

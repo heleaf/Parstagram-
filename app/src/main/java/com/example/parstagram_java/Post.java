@@ -8,6 +8,8 @@ import com.parse.ParseObject;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
+import org.parceler.Parcel;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.util.Date;
@@ -22,6 +24,8 @@ public class Post extends ParseObject {
     public static final String KEY_LIKES = "likes";
     public static final String KEY_USERS_WHO_LIKED = "usersWhoLiked";
     public static final String KEY_COMMENTS = "comments";
+
+    public Post(){}
 
     public String getDescription(){
         return getString(KEY_DESCRIPTION);

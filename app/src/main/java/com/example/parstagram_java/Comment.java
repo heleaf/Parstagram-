@@ -12,14 +12,13 @@ import java.util.Date;
 public class Comment extends ParseObject {
     public static final String KEY_AUTHOR = "author";
     public static final String KEY_MESSAGE = "message";
-    public static final String KEY_POST = "post";
     public static final String KEY_CREATED_AT = "createdAt";
 
-    public ParseUser getAuthor() {
-        return getParseUser(KEY_AUTHOR);
+    public String getAuthor() {
+        return getString(KEY_AUTHOR);
     }
 
-    public void setAuthor(ParseUser author){
+    public void setAuthor(String author){
         put(KEY_AUTHOR, author);
     }
 
@@ -31,20 +30,12 @@ public class Comment extends ParseObject {
         put(KEY_MESSAGE, message);
     }
 
-    public Post getPost(){
-        return (Post)getParseObject(KEY_POST);
-    }
-
-    public void setPost(Post post){
-        put(KEY_POST, post);
-    }
-
     public String getRelativeTimeCreated() {
         Date createdAt = getCreatedAt();
         String timeAgo = Post.calculateTimeAgo(createdAt);
         return timeAgo;
     }
 
-    public String getProfileImgUrl() { return Post.getProfileUrl(getAuthor().getUsername()); }
+    public String getProfileImgUrl() { return Post.getProfileUrl(getAuthor()); }
 
 }

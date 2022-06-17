@@ -1,8 +1,6 @@
 package com.example.parstagram_java.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -20,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram_java.Fragments.CommentsFragment;
 import com.example.parstagram_java.Fragments.PostDetail;
 import com.example.parstagram_java.Fragments.ProfileFragment;
 import com.example.parstagram_java.Post;
@@ -130,6 +128,21 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.commentClickListener = onCommentClickListener;
     }
 
+    public static OnCommentClickListener
+    getNewOnCommentClickListener(List<Post> posts, FragmentActivity activity, Fragment prevFragment){
+        return new OnCommentClickListener() {
+            @Override
+            public void onCommentClickListener(View itemView, int position) {
+                Post post = posts.get(position);
+                Fragment commentFragment = new CommentsFragment(post, prevFragment);
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, commentFragment);
+                fragmentTransaction.commit();
+            }
+        };
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView username;
         TextView username2;
@@ -146,10 +159,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView, OnItemClickListener clickListener) {
             super(itemView);
-            username = itemView.findViewById(R.id.timelineUsername);
+            username = itemView.findViewById(R.id.commentUsername);
             username2 = itemView.findViewById(R.id.timelineUsername2);
             postPhoto = itemView.findViewById(R.id.timelinePostPhoto);
-            profilePhoto = itemView.findViewById(R.id.timelineProfilePhoto);
+            profilePhoto = itemView.findViewById(R.id.commentProfilePhoto);
             description = itemView.findViewById(R.id.timelineDescription);
             relativeTimeStamp = itemView.findViewById(R.id.timelineRelativeTimeStamp);
 
@@ -179,6 +192,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             username.setOnClickListener(toProfilePhoto);
             username2.setOnClickListener(toProfilePhoto);
 
+            View.OnClickListener toComments = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d(TAG, "comments clicked");
+                    if (commentClickListener == null) return;
+                    commentClickListener.onCommentClickListener(itemView, getAdapterPosition());
+                }
+            };
+
+            commentButton.setOnClickListener(toComments);
+            viewAllComments.setOnClickListener(toComments);
+
         }
 
         public void bind(Post post) {
@@ -205,6 +230,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             likeButton.setOnClickListener(getlikeButtonOnClickListener(likeButton, numberOfLikes, post));
             setNumberLikesAndLikeButton(context, likeButton, numberOfLikes, post);
 
+//            commentButton.setOnClickListener(getNewOnCommentClickListener(commentButton, post;
             // commentButton.setOnClickListener();
             // viewAllComments.setOnClickListener(); // go to a new fragment...
 
