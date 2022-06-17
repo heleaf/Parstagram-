@@ -49,8 +49,11 @@ Please list two areas of the assignment you'd like to **discuss further with you
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
+
 ![instagram gif 1](https://user-images.githubusercontent.com/59301744/174386152-3da60587-1151-4906-904a-3a09ac1d5de5.gif)
+
 ![instagram gif 2](https://user-images.githubusercontent.com/59301744/174386159-48d75c0a-4425-41a9-8ca2-450c42badb90.gif)
+
 ![instagram gif 3](https://user-images.githubusercontent.com/59301744/174386164-f8d1842a-8dca-4fb4-9208-4b30a27560e2.gif)
 
 GIF created with Giphy
