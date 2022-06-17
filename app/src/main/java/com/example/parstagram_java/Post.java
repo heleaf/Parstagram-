@@ -5,6 +5,7 @@ import android.util.Log;
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
 import java.math.BigInteger;
@@ -19,6 +20,7 @@ public class Post extends ParseObject {
     public static final String KEY_USER = "user";
     public static final String KEY_CREATED_AT = "createdAt";
     public static final String KEY_LIKES = "likes";
+    public static final String KEY_USERS_WHO_LIKED = "usersWhoLiked";
 
     public String getDescription(){
         return getString(KEY_DESCRIPTION);
@@ -106,5 +108,9 @@ public class Post extends ParseObject {
 
     public Number getLikes(){
         return getNumber(KEY_LIKES);
+    }
+
+    public ParseRelation<ParseUser> getUsersWhoLikedRelation() {
+        return getRelation(KEY_USERS_WHO_LIKED);
     }
 }
