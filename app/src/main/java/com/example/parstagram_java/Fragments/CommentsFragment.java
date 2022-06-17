@@ -16,7 +16,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram_java.Adapters.CommentAdapter;
@@ -28,15 +30,14 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
-
-import org.parceler.Parcels;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsFragment extends Fragment {
 
-    private static final int RESULTS_PER_LOAD = 10;
+    private static final int RESULTS_PER_LOAD = 30;
     private static final String TAG = "CommentsFragment";
     Post post;
     RecyclerView rvComments;
@@ -44,6 +45,9 @@ public class CommentsFragment extends Fragment {
     List<Comment> comments;
     MenuItem backToFeedButton;
     Fragment prevFragment;
+
+    ImageView sendMessageButton;
+    EditText etCommentMessage;
 
     public CommentsFragment() {}
 
@@ -98,6 +102,23 @@ public class CommentsFragment extends Fragment {
         rvComments = view.findViewById(R.id.rvComments);
         comments = new ArrayList<>();
         adapter = new CommentAdapter(getContext(), comments);
+        sendMessageButton = view.findViewById(R.id.sendCommentButton);
+        etCommentMessage = view.findViewById(R.id.etCommentMessage);
+
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String messageText = etCommentMessage.getText().toString();
+                Log.d(TAG, messageText);
+                if (messageText.isEmpty()){
+                    Toast.makeText(getContext(),
+                            "Error: comment cannot be empty",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+                postComment(messageText);
+            }
+        });
 
         rvComments.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -106,6 +127,40 @@ public class CommentsFragment extends Fragment {
         queryComments(0, RESULTS_PER_LOAD, true);
 
 
+    }
+
+    private void postComment(String messageText) {
+        Comment comment = new Comment();
+        comment.setMessage(messageText);
+        comment.setAuthor(ParseUser.getCurrentUser().getUsername());
+
+        comment.saveInBackground(new SaveCallback() {
+             @Override
+             public void done(ParseException e) {
+                 if (e != null){
+                     Toast.makeText(getContext(), "Error saving comment: " + e.getMessage(),
+                             Toast.LENGTH_LONG).show();
+                     return;
+                 }
+                 ParseRelation<Comment> postComments = post.getComments();
+                 postComments.add(comment);
+                 post.saveInBackground(new SaveCallback() {
+                     @Override
+                     public void done(ParseException e) {
+                         if (e != null){
+                             Toast.makeText(getContext(), "Error updating post with comment: " + e.getMessage(),
+                                     Toast.LENGTH_LONG).show();
+                             return;
+                         }
+                         adapter.notifyDataSetChanged();
+                         etCommentMessage.setText("");
+                     }
+                 });
+             }
+         });
+
+//        ParseRelation<Comment> postComments = post.getComments();
+//        post
     }
 
     private void queryComments(int numResultsToSkip, int resultsPerLoad, boolean notifyEntireDataSet) {
