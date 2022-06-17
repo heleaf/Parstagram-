@@ -2,6 +2,7 @@ package com.example.parstagram_java.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     // Define listener member variable
     private OnItemClickListener listener;
     private OnProfilePhotoClickListener profilePhotoClickListener;
+    private OnCommentClickListener commentClickListener;
 
     public PostAdapter(Context context, List<Post> posts){
         this.context = context;
@@ -120,6 +122,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         };
     }
 
+    public interface OnCommentClickListener {
+        void onCommentClickListener(View itemView, int position);
+    }
+
+    public void setOnCommentClickListener(OnCommentClickListener onCommentClickListener){
+        this.commentClickListener = onCommentClickListener;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView username;
         TextView username2;
@@ -130,6 +140,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         TextView numberOfLikes;
         ImageView likeButton;
+
+        TextView viewAllComments;
+        ImageView commentButton;
 
         public ViewHolder(@NonNull View itemView, OnItemClickListener clickListener) {
             super(itemView);
@@ -142,6 +155,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             numberOfLikes = itemView.findViewById(R.id.numberLikes);
             likeButton = itemView.findViewById(R.id.heartButton);
+
+            viewAllComments = itemView.findViewById(R.id.viewAllComments);
+            commentButton = itemView.findViewById(R.id.commentButton);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,6 +204,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             likeButton.setOnClickListener(getlikeButtonOnClickListener(likeButton, numberOfLikes, post));
             setNumberLikesAndLikeButton(context, likeButton, numberOfLikes, post);
+
+            // commentButton.setOnClickListener();
+            // viewAllComments.setOnClickListener(); // go to a new fragment...
+
         }
 
         // set the number of likes based on the database data

@@ -122,23 +122,14 @@
         app:layout_constraintStart_toEndOf="@+id/timelineUsername2"
         app:layout_constraintTop_toTopOf="@+id/timelineUsername2" />
 
-            <TextView
-                android:id="@+id/viewAllComments"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="View all comments"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/timelineDescription" />
-
     <TextView
         android:id="@+id/timelineRelativeTimeStamp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:text="Timestamp"
+        android:textColor="#9F9F9F"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -175,6 +166,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timelinePostPhoto"
         app:srcCompat="@drawable/ufi_heart" />
+
+    <ImageView
+        android:id="@+id/commentButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/heartButton"
+        app:layout_constraintTop_toTopOf="@+id/heartButton"
+        app:srcCompat="@drawable/ufi_comment" />
+
+    <TextView
+        android:id="@+id/viewAllComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="View all comments"
+        android:textColor="#9F9F9F"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timelineUsername2" />
 
     <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 <!--    </ScrollView>-->
