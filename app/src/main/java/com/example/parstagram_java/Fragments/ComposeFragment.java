@@ -171,6 +171,7 @@ public class ComposeFragment extends Fragment {
         post.setDescription(descriptionText);
         post.setUser(currUser);
         post.setImage(new ParseFile(photoFile));
+        post.setLikes(0);
 
         if (progressBar != null) {
             progressBar.setVisibility(ProgressBar.VISIBLE);
