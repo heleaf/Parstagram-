@@ -34,7 +34,7 @@ The following **stretch** features are implemented:
   - [x] Tapping on a post's username or profile photo goes to that user's profile page
   - [x] User Profile shows posts in a grid
 - [x] After the user submits a new post, show an indeterminate progress bar while the post is being uploaded to Parse
-- [ ] User can comment on a post and see all comments for each post in the post details screen.
+- [x] User can comment on a post and see all comments for each post in the post details screen.
 - [x] User can like a post and see number of likes for each post in the post details screen.
 
 The following **additional** features are implemented:
@@ -50,11 +50,10 @@ Please list two areas of the assignment you'd like to **discuss further with you
 
 Here's a walkthrough of implemented user stories:
 
-![instagram gif 1](https://user-images.githubusercontent.com/59301744/174386152-3da60587-1151-4906-904a-3a09ac1d5de5.gif)
+![ig gif 1](https://user-images.githubusercontent.com/59301744/174413667-e1b9849a-478b-4621-9152-4ffe264b2216.gif)
 
-![instagram gif 2](https://user-images.githubusercontent.com/59301744/174386159-48d75c0a-4425-41a9-8ca2-450c42badb90.gif)
+![ig gif 2](https://user-images.githubusercontent.com/59301744/174413670-c781c02e-e945-426e-88c9-e74d073678fe.gif)
 
-![instagram gif 3](https://user-images.githubusercontent.com/59301744/174386164-f8d1842a-8dca-4fb4-9208-4b30a27560e2.gif)
 
 GIF created with Giphy
 
