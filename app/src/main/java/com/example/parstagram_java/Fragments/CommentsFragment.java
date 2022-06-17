@@ -159,8 +159,6 @@ public class CommentsFragment extends Fragment {
              }
          });
 
-//        ParseRelation<Comment> postComments = post.getComments();
-//        post
     }
 
     private void queryComments(int numResultsToSkip, int resultsPerLoad, boolean notifyEntireDataSet) {
@@ -177,7 +175,6 @@ public class CommentsFragment extends Fragment {
             @Override
             public void done(List<Comment> objects, ParseException e) {
                 if (e != null){
-                    // error
                     Log.e(TAG, "Error querying for comments", e);
                     return;
                 }
