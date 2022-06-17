@@ -54,6 +54,7 @@ Here's a walkthrough of implemented user stories:
 
 ![ig gif 2](https://user-images.githubusercontent.com/59301744/174413670-c781c02e-e945-426e-88c9-e74d073678fe.gif)
 
+![ig gif 3](https://user-images.githubusercontent.com/59301744/174413735-b255d474-6435-4f71-8b0f-e36a7760bfd3.gif)
 
 GIF created with Giphy
 
