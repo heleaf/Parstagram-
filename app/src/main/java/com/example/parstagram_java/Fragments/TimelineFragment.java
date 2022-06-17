@@ -41,20 +41,12 @@ public class TimelineFragment extends Fragment {
     List<Post> posts;
     SwipeRefreshLayout swipeContainer;
 
-    Post startPost;
-
     // Store a member variable for the listener
     EndlessRecyclerViewScrollListener scrollListener;
 
     public TimelineFragment() {
         // Required empty public constructor
-        this.startPost = null;
     }
-
-    public TimelineFragment(Post startPost){
-        this.startPost = startPost;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,41 +75,13 @@ public class TimelineFragment extends Fragment {
         rvPosts = view.findViewById(R.id.rvPosts);
         posts = new ArrayList<>();
         adapter = new PostAdapter(getContext(), posts);
-        adapter.setOnItemClickListener(new PostAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, int position) {
-                if (itemView == null){
-                    Log.d(TAG, "clicked null item");
-                    return;
-                }
-                Post post = posts.get(position);
-                Log.d(TAG, "Post at position " + position + " clicked: " + post.getDescription());
 
-                // send this post to the postDetail fragment
-                // move to the postDetail fragment
-                Log.d(TAG, "trying post detail");
-                Fragment fragment = new PostDetail(post, TimelineFragment.this);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.flContainer, fragment);
-                fragmentTransaction.commit();
-            }
-        });
+        adapter.setOnItemClickListener(PostAdapter.getNewOnItemClickListener(posts,
+                getActivity(), TimelineFragment.this));
 
-        adapter.setOnProfilePhotoClickListener(new PostAdapter.OnProfilePhotoClickListener() {
-            @Override
-            public void onProfilePhotoClick(View itemView, int position) {
-                Post post = posts.get(position);
-                ParseUser user = post.getUser();
-//                Fragment profileFragment = new ProfileFragment(user, true, TimelineFragment.this);
-                Fragment profileFragment = new ProfileFragment(user,
-                        true, TimelineFragment.this);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.flContainer, profileFragment);
-                fragmentTransaction.commit();
-            }
-        });
+        adapter.setOnProfilePhotoClickListener(PostAdapter.getNewOnProfilePhotoClickListener(
+                posts, getActivity(), TimelineFragment.this
+        ));
 
         rvPosts.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -129,7 +93,7 @@ public class TimelineFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 // Triggered only when new data needs to be appended to the list
                 // Add whatever code is needed to append new items to the bottom of the list
-                loadNextDataFromApi(page);
+                queryPosts(posts.size(), RESULTS_PER_LOAD, false);
             }
         };
         // Adds the scroll listener to RecyclerView
@@ -158,19 +122,6 @@ public class TimelineFragment extends Fragment {
         queryPosts(0, RESULTS_PER_LOAD, true);
     }
 
-    // Append the next page of data into the adapter
-    protected void loadNextDataFromApi(int offset) {
-        // Send an API request to retrieve appropriate paginated data
-        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
-        //  --> Deserialize and construct new model objects from the API response
-        //  --> Append the new data objects to the existing set of items inside the array of items
-        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
-
-        queryPosts(posts.size(), RESULTS_PER_LOAD, false);
-        Log.d(TAG, "loading more: " + posts.size());
-    }
-
-
     protected void queryPosts(int numResultsToSkip, int numberOfResults, boolean notifyEntireDataSet
                               ){
         // get an object for querying posts
@@ -180,7 +131,7 @@ public class TimelineFragment extends Fragment {
         query.include(Post.KEY_USER);
 
         query.setSkip(numResultsToSkip);
-        query.setLimit(numberOfResults); // 20 latest
+        query.setLimit(numberOfResults);
 
         query.addDescendingOrder(Post.KEY_CREATED_AT); // newest first
 

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram_java.Adapters.PostAdapter;
 import com.example.parstagram_java.Adapters.ProfilePostAdapter;
 import com.example.parstagram_java.EndlessRecyclerViewScrollListener;
 import com.example.parstagram_java.Post;
@@ -98,18 +99,8 @@ public class ProfileFragment extends Fragment {
         adapter = new ProfilePostAdapter(getContext(), posts);
 
         // TODO: set on item click listener for the adapter?
-        adapter.setOnItemClickListener(new ProfilePostAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View itemView, int position) {
-                // find the post
-                Post post = posts.get(position);
-                Fragment fragment = new PostDetail(post, ProfileFragment.this);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.flContainer, fragment);
-                fragmentTransaction.commit();
-            }
-        });
+        adapter.setOnItemClickListener(ProfilePostAdapter.getNewOnItemClickListener(posts, getActivity(),
+                ProfileFragment.this));
 
         rvProfilePosts.setAdapter(adapter);
 

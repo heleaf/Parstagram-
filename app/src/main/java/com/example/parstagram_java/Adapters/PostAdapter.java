@@ -1,5 +1,6 @@
 package com.example.parstagram_java.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +12,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.parstagram_java.Fragments.PostDetail;
+import com.example.parstagram_java.Fragments.ProfileFragment;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
 import com.parse.FindCallback;
@@ -69,12 +76,48 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         this.listener = listener;
     }
 
+    public static OnItemClickListener getNewOnItemClickListener(List<Post> posts, FragmentActivity activity,
+                                                                Fragment prevFragment){
+        return new OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int position) {
+                if (itemView == null) {
+                    Log.d(TAG, "clicked null item");
+                    return;
+                }
+                Post post = posts.get(position);
+                Fragment fragment = new PostDetail(post, prevFragment);
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, fragment);
+                fragmentTransaction.commit();
+            }
+        };
+    }
+
     public interface OnProfilePhotoClickListener {
         void onProfilePhotoClick(View itemView, int position);
     }
 
     public void setOnProfilePhotoClickListener(OnProfilePhotoClickListener profilePhotoClickListener) {
         this.profilePhotoClickListener = profilePhotoClickListener;
+    }
+
+    public static OnProfilePhotoClickListener
+    getNewOnProfilePhotoClickListener(List<Post> posts, FragmentActivity activity, Fragment prevFragment){
+        return new OnProfilePhotoClickListener() {
+            @Override
+            public void onProfilePhotoClick(View itemView, int position) {
+                Post post = posts.get(position);
+                ParseUser user = post.getUser();
+                Fragment profileFragment = new ProfileFragment(user, true,
+                        prevFragment);
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.flContainer, profileFragment);
+                fragmentTransaction.commit();
+            }
+        };
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -108,13 +151,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             });
 
-            profilePhoto.setOnClickListener(new View.OnClickListener() {
+            View.OnClickListener toProfilePhoto = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (profilePhotoClickListener == null) return;
                     profilePhotoClickListener.onProfilePhotoClick(itemView, getAdapterPosition());
                 }
-            });
+            };
+
+            profilePhoto.setOnClickListener(toProfilePhoto);
+            username.setOnClickListener(toProfilePhoto);
+            username2.setOnClickListener(toProfilePhoto);
+
         }
 
         public void bind(Post post) {
@@ -142,6 +190,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             setNumberLikesAndLikeButton(context, likeButton, numberOfLikes, post);
         }
 
+        // set the number of likes based on the database data
         void setNumberLikesAndLikeButton(Context context, ImageView likeButton, TextView numberOfLikes, Post post){
             ParseUser currentUser = ParseUser.getCurrentUser();
             ParseRelation<ParseUser> usersWhoLikedRelation = post.getUsersWhoLikedRelation();
@@ -156,7 +205,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                                Toast.LENGTH_LONG).show();
                        return;
                    }
-//                   Log.d(TAG, String.valueOf(objects.size()));
                    boolean postIsLiked = objects.size() > 0;
                    int likeButtonIconId = postIsLiked ? R.drawable.ufi_heart_active
                            : R.drawable.ufi_heart_icon;
@@ -171,15 +219,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             return new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "like button has been toggled");
-                    // i need to find the user who liked this...
-                    ParseUser currentUser = ParseUser.getCurrentUser(); // yay
-                    Number numberLikesOnPost = post.getLikes() == null ? 0 : post.getLikes();
+                    ParseUser currentUser = ParseUser.getCurrentUser();
                     ParseRelation<ParseUser> usersWhoLikedRelation = post.getUsersWhoLikedRelation();
-                    Log.d(TAG, currentUser.getUsername());
-                    Log.d(TAG, "number of likes on the post: " + numberLikesOnPost);
-                    Log.d(TAG, String.valueOf(usersWhoLikedRelation));
-
                     ParseQuery<ParseUser> queryOnLikedUsers = usersWhoLikedRelation.getQuery();
                     queryOnLikedUsers.whereEqualTo("username", currentUser.getUsername());
                     queryOnLikedUsers.findInBackground(new FindCallback<ParseUser>() {
@@ -193,40 +234,52 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                             }
                             Log.d(TAG, String.valueOf(objects.size()));
                             boolean postIsAlreadyLiked = objects.size() > 0;
-                            if (postIsAlreadyLiked) {
-                                Log.d(TAG, "unliking " + post.getDescription());
-                                // decrease the likes on the post by 1
-                                post.setLikes(numberLikesOnPost.intValue() - 1);
-                                // make it so that the user no longer likes the post
-                                usersWhoLikedRelation.remove(currentUser);
-                            } else {
-                                Log.d(TAG, "liking " + post.getDescription());
-                                // increase the likes on the post by 1
-                                post.setLikes(numberLikesOnPost.intValue() + 1);
-                                // make it so that the user likes the post
-                                usersWhoLikedRelation.add(currentUser);
-                            }
-                            int likeButtonIconId = postIsAlreadyLiked ? R.drawable.ufi_heart_icon
-                                    : R.drawable.ufi_heart_active;
-
-                            post.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if (e != null){
-                                        Log.d(TAG, "error saving likes on post: " + e.getMessage());
-                                        return;
-                                    }
-                                    Log.d(TAG, "yay i saved the likes? ");
-                                    likeButton.setImageResource(likeButtonIconId);
-                                    Number newLikes = post.getLikes() == null ? 0 : post.getLikes();
-                                    numberOfLikes.setText(String.format("%s likes", newLikes));
-                                }
-                            });
+                            adjustPostLikesAndNumberLikes(postIsAlreadyLiked, post, likeButton,
+                                    numberOfLikes);
                         }
                     });
-////
                 }
             };
+        }
+
+        void adjustPostLikesAndNumberLikes(boolean postIsAlreadyLiked,
+                                           Post post, ImageView likeButton,
+                                           TextView numberOfLikes){
+
+            ParseUser currentUser = ParseUser.getCurrentUser();
+            ParseRelation<ParseUser> usersWhoLikedRelation = post.getUsersWhoLikedRelation();
+            Number numberLikesOnPost = post.getLikes() == null ? 0 : post.getLikes();
+
+            // update post data in the database
+            if (postIsAlreadyLiked){
+                // decrease the likes on the post by 1
+                post.setLikes(numberLikesOnPost.intValue() - 1);
+                // make it so that the user no longer likes the post
+                usersWhoLikedRelation.remove(currentUser);
+            } else {
+                // increase the likes on the post by 1
+                post.setLikes(numberLikesOnPost.intValue() + 1);
+                // make it so that the user likes the post
+                usersWhoLikedRelation.add(currentUser);
+            }
+
+            // save to the database
+            post.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null){
+                        Log.d(TAG, "Error saving likes on post: " + e.getMessage());
+                        return;
+                    }
+                    // update the UI
+                    int likeButtonIconId = postIsAlreadyLiked ? R.drawable.ufi_heart_icon
+                            : R.drawable.ufi_heart_active;
+                    likeButton.setImageResource(likeButtonIconId);
+                    Number newLikes = post.getLikes() == null ? 0 : post.getLikes();
+                    numberOfLikes.setText(String.format("%s likes", newLikes));
+                }
+            });
+
         }
 
     }

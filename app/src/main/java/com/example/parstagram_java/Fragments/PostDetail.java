@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +24,8 @@ import com.example.parstagram_java.Adapters.PostAdapter;
 import com.example.parstagram_java.Post;
 import com.example.parstagram_java.R;
 import com.parse.ParseUser;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,15 @@ public class PostDetail extends Fragment {
 
     public PostDetail() {
         // Required empty public constructor
+    }
+
+    // TODO: refactor PostDetail constructor to use args instead
+    public static PostDetail newInstance(Post post) {
+        PostDetail fragment = new PostDetail();
+        Bundle args = new Bundle();
+        args.putParcelable("postToDisplay", Parcels.wrap(post));
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public PostDetail(Post post, Fragment prevFragment){
@@ -64,31 +76,19 @@ public class PostDetail extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // get args
+//        Bundle args = getArguments();
+//        if (args != null) {
+//           post = Parcels.unwrap(args.getParcelable("postToDisplay"));
+//        }
+
         rvPost = view.findViewById(R.id.rvPosts);
         posts = new ArrayList<>();
         posts.add(post);
         adapter = new PostAdapter(getContext(), posts);
-//        adapter.setOnItemClickListener(new PostAdapter.OnItemClickListener() {
-//               @Override
-//               public void onItemClick(View itemView, int position) {
-//
-//               }
-//           });
 
-        adapter.setOnProfilePhotoClickListener(new PostAdapter.OnProfilePhotoClickListener() {
-            @Override
-            public void onProfilePhotoClick(View itemView, int position) {
-                Post post = posts.get(position);
-                ParseUser user = post.getUser();
-//                Fragment profileFragment = new ProfileFragment(user, true, PostDetail.this);
-                Fragment profileFragment = new ProfileFragment(user,
-                        true, PostDetail.this);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.flContainer, profileFragment);
-                fragmentTransaction.commit();
-            }
-        });
+        adapter.setOnProfilePhotoClickListener(PostAdapter.getNewOnProfilePhotoClickListener(posts,
+                getActivity(), PostDetail.this));
 
         rvPost.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
